@@ -179,7 +179,7 @@
       color: var(--text);
       transition: all 0.22s ease;
       cursor: pointer; border: none; width: 100%;
-      text-align: left; font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif;
+      text-align: start; font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif;
     }
     .btn-save { background: var(--gold); color: #000 !important; }
     .btn-save:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(201,168,76,0.3); }
@@ -199,8 +199,13 @@
 
     .btn-text { flex: 1; }
     .btn-text .sub { display: block; font-size: 0.68rem; opacity: 0.55; margin-top: 1px; }
+    [dir="rtl"] .btn-text { text-align: right; }
+    [dir="rtl"] .btn-text .sub { text-align: right; unicode-bidi: plaintext; }
+    [dir="rtl"] .btn-text .sub { text-align: right; }
     .btn-arrow { opacity: 0.35; font-size: 0.8rem; transition: all 0.2s; }
     .btn:hover .btn-arrow { opacity: 0.9; transform: translateX(3px); }
+    [dir="rtl"] .btn-arrow { content: '‹'; transform: scaleX(-1); }
+    [dir="rtl"] .btn:hover .btn-arrow { transform: scaleX(-1) translateX(-3px); }
 
     .tip-wave {
       margin: 1.2rem 1.4rem 0;
@@ -323,7 +328,7 @@
       <div class="btn-icon"><i class="fas fa-user-plus"></i></div>
       <div class="btn-text">
         <span data-key="save">Save Contact</span>
-        <span class="sub">Add to your phone</span>
+        <span class="sub" data-key="save_sub">Add to your phone</span>
       </div>
       <span class="btn-arrow">›</span>
     </button>
@@ -332,7 +337,7 @@
       <div class="btn-icon"><i class="fab fa-whatsapp"></i></div>
       <div class="btn-text">
         <span data-key="whatsapp">Chat on WhatsApp</span>
-        <span class="sub">+971 56 848 6808</span>
+        <span class="sub" data-key="phone_num">+971 56 848 6808</span>
       </div>
       <span class="btn-arrow">›</span>
     </a>
@@ -341,7 +346,7 @@
       <div class="btn-icon"><i class="fas fa-phone"></i></div>
       <div class="btn-text">
         <span data-key="call">Call Now</span>
-        <span class="sub">+971 56 848 6808</span>
+        <span class="sub" data-key="phone_num2">+971 56 848 6808</span>
       </div>
       <span class="btn-arrow">›</span>
     </a>
@@ -368,7 +373,7 @@
       <div class="btn-icon"><i class="fas fa-share-nodes"></i></div>
       <div class="btn-text">
         <span data-key="share">Share This Card</span>
-        <span class="sub">Copy or share the link</span>
+        <span class="sub" data-key="share_sub">Copy or share the link</span>
       </div>
       <span class="btn-arrow">›</span>
     </button>
@@ -407,16 +412,22 @@ const translations = {
   en: {
     name:"Muhammed Ashkar Muthuvatt", designation:"IT Infrastructure Technician",
     slogan:"Reliable IT & Smart Infrastructure Solutions, From Sales To Support",
-    save:"Save Contact", whatsapp:"Chat on WhatsApp", call:"Call Now",
-    email:"Send Email", website:"Visit Website", share:"Share This Card",
+    save:"Save Contact", save_sub:"Add to your phone",
+    whatsapp:"Chat on WhatsApp", phone_num:"+971 56 848 6808", phone_num2:"+971 56 848 6808",
+    call:"Call Now",
+    email:"Send Email", website:"Visit Website",
+    share:"Share This Card", share_sub:"Copy or share the link",
     tip:"Tip: Save contact first for easier WhatsApp identification",
     footer:"UAE | Ajman • Sharjah • Dubai"
   },
   ar: {
     name:"محمد اشكر مدوات", designation:"فني البنية التحتية لتقنية المعلومات",
     slogan:"حلول تقنية معلومات وبنية تحتية ذكية موثوقة، من البيع إلى الدعم",
-    save:"حفظ جهة الاتصال", whatsapp:"الدردشة عبر واتساب", call:"اتصال الآن",
-    email:"إرسال بريد إلكتروني", website:"زيارة الموقع", share:"مشاركة البطاقة",
+    save:"حفظ جهة الاتصال", save_sub:"أضف إلى هاتفك",
+    whatsapp:"الدردشة عبر واتساب", phone_num:"‏+٩٧١ ٥٦ ٨٤٨ ٦٨٠٨", phone_num2:"‏+٩٧١ ٥٦ ٨٤٨ ٦٨٠٨",
+    call:"اتصال الآن",
+    email:"إرسال بريد إلكتروني", website:"زيارة الموقع",
+    share:"مشاركة البطاقة", share_sub:"انسخ أو شارك الرابط",
     tip:"نصيحة: احفظ جهة الاتصال أولاً لسهولة التعرف عبر واتساب",
     footer:"الإمارات العربية المتحدة | عجمان • الشارقة • دبي"
   }
