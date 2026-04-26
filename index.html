@@ -4,7 +4,13 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rakhsa Infra Tech | Digital Card</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <!-- Calibri is a system font on Windows/Office; fallback chain for other OSes -->
+  <style>
+    @font-face {
+      font-family: 'Calibri';
+      src: local('Calibri'), local('Calibri-Regular');
+    }
+  </style>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,7 +32,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Calibri', 'Calibri Light', 'Trebuchet MS', 'Gill Sans', Arial, sans-serif;
       padding: 2rem 1rem;
     }
 
@@ -80,21 +86,21 @@
     }
 
     .lang-toggle {
-      display: flex; gap: 3px;
       background: var(--dark-3);
-      border: 1px solid rgba(201,168,76,0.12);
+      border: 1px solid rgba(201,168,76,0.2);
       border-radius: 20px; padding: 3px;
     }
     .lang-toggle button {
-      background: none; border: none;
-      color: var(--muted);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.68rem; font-weight: 500;
-      letter-spacing: 0.1em;
-      padding: 4px 11px; border-radius: 16px;
-      cursor: pointer; transition: all 0.2s;
+      background: var(--gold); border: none;
+      color: #000;
+      font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 5px 14px; border-radius: 16px;
+      cursor: pointer; transition: all 0.22s;
+      display: flex; align-items: center; gap: 5px;
     }
-    .lang-toggle button.active-lang { background: var(--gold); color: #000; }
+    .lang-toggle button:hover { background: var(--gold-light); transform: scale(1.05); }
 
     .hero {
       display: flex; flex-direction: column; align-items: center;
@@ -123,8 +129,8 @@
     }
 
     .name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.7rem; font-weight: 600;
+      font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif;
+      font-size: 1.6rem; font-weight: 700;
       color: var(--text); text-align: center;
       letter-spacing: 0.02em;
       animation: rise 0.8s 0.1s both;
@@ -173,7 +179,7 @@
       color: var(--text);
       transition: all 0.22s ease;
       cursor: pointer; border: none; width: 100%;
-      text-align: left; font-family: 'DM Sans', sans-serif;
+      text-align: left; font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif;
     }
     .btn-save { background: var(--gold); color: #000 !important; }
     .btn-save:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(201,168,76,0.3); }
@@ -253,7 +259,7 @@
     }
     @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
     .share-sheet h3 {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif;
       font-size: 1.3rem; color: var(--text);
       text-align: center; margin-bottom: 1.1rem;
     }
@@ -276,7 +282,7 @@
       display: block; width: 100%; padding: 12px;
       background: var(--dark-3); border: 1px solid rgba(255,255,255,0.06);
       border-radius: 10px; color: var(--muted);
-      font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+      font-family: 'Calibri', 'Trebuchet MS', Arial, sans-serif; font-size: 0.82rem;
       cursor: pointer; transition: color 0.2s;
     }
     .close-sheet:hover { color: var(--text); }
@@ -294,8 +300,7 @@
 
   <div class="topbar">
     <div class="lang-toggle">
-      <button id="btn-en" onclick="setLang('en')" class="active-lang">EN</button>
-      <button id="btn-ar" onclick="setLang('ar')">AR</button>
+      <button id="lang-btn" onclick="toggleLang()">🌐 عربي</button>
     </div>
   </div>
 
@@ -417,14 +422,22 @@ const translations = {
   }
 };
 
+let currentLang = 'en';
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'ar' : 'en';
+  setLang(currentLang);
+}
+
 function setLang(lang) {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   document.querySelectorAll('[data-key]').forEach(el => {
     el.textContent = translations[lang][el.dataset.key];
   });
-  document.getElementById('btn-en').classList.toggle('active-lang', lang === 'en');
-  document.getElementById('btn-ar').classList.toggle('active-lang', lang === 'ar');
+  // Button shows the OTHER language (what you'll switch TO)
+  const btn = document.getElementById('lang-btn');
+  btn.innerHTML = lang === 'en' ? '🌐 عربي' : '🌐 English';
 }
 setLang('en');
 
