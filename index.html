@@ -1,162 +1,456 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rakhsa Infra Tech | Digital Card</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#071825">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --dark: #080C10;
+      --dark-2: #0F1419;
+      --dark-3: #161D25;
+      --text: #EAE2D4;
+      --muted: #7A8A99;
+      --card-w: 430px;
+    }
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    body {
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      padding: 2rem 1rem;
+    }
 
-  <link rel="stylesheet" href="styles.css">
+    body::before {
+      content: '';
+      position: fixed;
+      top: -150px; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(201,168,76,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .particles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+    .particle {
+      position: absolute; width: 2px; height: 2px;
+      background: var(--gold); border-radius: 50%; opacity: 0;
+      animation: float var(--dur, 8s) var(--delay, 0s) infinite ease-in-out;
+    }
+    .particle:nth-child(1) { left:15%; --dur:9s; --delay:0s; }
+    .particle:nth-child(2) { left:35%; --dur:11s; --delay:2s; }
+    .particle:nth-child(3) { left:55%; --dur:8s; --delay:4s; }
+    .particle:nth-child(4) { left:75%; --dur:12s; --delay:1s; }
+    .particle:nth-child(5) { left:90%; --dur:10s; --delay:3s; }
+    @keyframes float {
+      0%   { opacity:0; transform:translateY(100vh) scale(0); }
+      10%  { opacity:0.6; }
+      90%  { opacity:0.4; }
+      100% { opacity:0; transform:translateY(-10vh) scale(1.5); }
+    }
+
+    .card {
+      position: relative;
+      width: min(var(--card-w), 100%);
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 28px;
+      overflow: hidden;
+      z-index: 1;
+      animation: rise 0.9s cubic-bezier(0.22,1,0.36,1) both;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+    }
+    @keyframes rise {
+      from { opacity:0; transform:translateY(40px) scale(0.96); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      padding: 1rem 1.4rem 0;
+    }
+
+    .lang-toggle {
+      display: flex; gap: 3px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 20px; padding: 3px;
+    }
+    .lang-toggle button {
+      background: none; border: none;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.1em;
+      padding: 4px 11px; border-radius: 16px;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .lang-toggle button.active-lang { background: var(--gold); color: #000; }
+
+    .hero {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 1.5rem 1.5rem 0;
+    }
+
+    .avatar-wrap {
+      position: relative; width: 110px; height: 110px;
+      margin-bottom: 1.2rem;
+    }
+    .avatar-wrap::before {
+      content: '';
+      position: absolute; inset: -3px; border-radius: 50%;
+      background: conic-gradient(var(--gold) 0deg, var(--gold-light) 90deg, transparent 160deg, transparent 200deg, var(--gold) 360deg);
+      animation: spin 5s linear infinite;
+    }
+    .avatar-wrap::after {
+      content: ''; position: absolute; inset: 0;
+      border-radius: 50%; background: var(--dark-2); margin: -1px; z-index: 1;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .avatar-wrap img.profile-pic {
+      position: absolute; inset: 3px; border-radius: 50%;
+      object-fit: cover; z-index: 2;
+      width: calc(100% - 6px); height: calc(100% - 6px);
+    }
+
+    .name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem; font-weight: 600;
+      color: var(--text); text-align: center;
+      letter-spacing: 0.02em;
+      animation: rise 0.8s 0.1s both;
+    }
+    .designation {
+      font-size: 0.72rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-top: 0.4rem;
+      animation: rise 0.8s 0.2s both;
+    }
+
+    .logo-wrap {
+      margin-top: 1.1rem;
+      animation: rise 0.8s 0.25s both;
+    }
+    .logo-wrap img {
+      height: 42px; object-fit: contain;
+      filter: brightness(1.05) drop-shadow(0 2px 8px rgba(201,168,76,0.2));
+    }
+
+    .slogan {
+      margin-top: 0.75rem;
+      font-size: 0.78rem; color: var(--muted);
+      text-align: center; line-height: 1.65;
+      max-width: 270px;
+      animation: rise 0.8s 0.3s both;
+    }
+
+    .divider {
+      width: 50px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.3rem auto;
+    }
+
+    .buttons {
+      display: flex; flex-direction: column; gap: 9px;
+      padding: 0 1.4rem;
+      animation: rise 0.8s 0.35s both;
+    }
+
+    .btn {
+      display: flex; align-items: center; gap: 13px;
+      padding: 12px 16px; border-radius: 13px;
+      text-decoration: none;
+      font-size: 0.84rem; font-weight: 500;
+      color: var(--text);
+      transition: all 0.22s ease;
+      cursor: pointer; border: none; width: 100%;
+      text-align: left; font-family: 'DM Sans', sans-serif;
+    }
+    .btn-save { background: var(--gold); color: #000 !important; }
+    .btn-save:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(201,168,76,0.3); }
+    .btn-wa { background: linear-gradient(135deg,#075E54,#128C7E); color: #fff !important; }
+    .btn-wa:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(18,140,126,0.3); }
+    .btn-default { background: var(--dark-3); border: 1px solid rgba(255,255,255,0.06); }
+    .btn-default:hover { border-color: rgba(201,168,76,0.35); background: rgba(201,168,76,0.07); transform: translateY(-1px); }
+
+    .btn-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; font-size: 0.95rem;
+    }
+    .btn-save .btn-icon    { background: rgba(0,0,0,0.12); }
+    .btn-wa .btn-icon      { background: rgba(0,0,0,0.15); }
+    .btn-default .btn-icon { background: rgba(255,255,255,0.05); color: var(--gold); }
+
+    .btn-text { flex: 1; }
+    .btn-text .sub { display: block; font-size: 0.68rem; opacity: 0.55; margin-top: 1px; }
+    .btn-arrow { opacity: 0.35; font-size: 0.8rem; transition: all 0.2s; }
+    .btn:hover .btn-arrow { opacity: 0.9; transform: translateX(3px); }
+
+    .tip-wave {
+      margin: 1.2rem 1.4rem 0;
+      background: rgba(201,168,76,0.07);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 10px; padding: 9px 14px;
+      font-size: 0.71rem; color: var(--muted);
+      text-align: center;
+      animation: rise 0.8s 0.45s both;
+    }
+
+    .socials {
+      display: flex; justify-content: center; gap: 10px;
+      padding: 1.2rem 1.4rem 0;
+      animation: rise 0.8s 0.5s both;
+    }
+    .socials a {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; font-size: 1rem;
+      background: var(--dark-3);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: all 0.22s ease;
+    }
+    .socials a:hover { transform: translateY(-3px) scale(1.1); border-color: var(--gold); }
+    .socials a.ig:hover { background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+    .socials a.fb:hover { background: #1877F2; }
+    .socials a.tt:hover { background: #000; border-color: #fff; }
+    .socials a.pt:hover { background: #E60023; }
+    .socials a.li:hover { background: #0A66C2; }
+    .socials a.yt:hover { background: #FF0000; }
+    .socials a i { color: var(--muted); transition: color 0.2s; }
+    .socials a:hover i { color: #fff; }
+
+    .footer {
+      margin-top: 1rem; padding: 0.9rem 1.4rem 1.4rem;
+      text-align: center; font-size: 0.72rem;
+      color: var(--muted); letter-spacing: 0.07em;
+      animation: rise 0.8s 0.55s both;
+    }
+    .footer::before { content: '📍 '; }
+
+    /* Share modal */
+    .share-modal {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      z-index: 100; align-items: flex-end; justify-content: center;
+    }
+    .share-modal.open { display: flex; }
+    .share-sheet {
+      background: var(--dark-2);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 24px 24px 0 0; padding: 1.6rem;
+      width: min(var(--card-w), 100%);
+      animation: slideUp 0.3s cubic-bezier(0.22,1,0.36,1);
+    }
+    @keyframes slideUp { from { transform:translateY(100%); } to { transform:translateY(0); } }
+    .share-sheet h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem; color: var(--text);
+      text-align: center; margin-bottom: 1.1rem;
+    }
+    .share-url {
+      display: flex; gap: 8px;
+      background: var(--dark-3);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 10px; padding: 10px 14px;
+      align-items: center; margin-bottom: 1rem;
+    }
+    .share-url span { flex:1; font-size:0.73rem; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .copy-btn {
+      background: var(--gold); color: #000;
+      border: none; border-radius: 7px;
+      padding: 6px 14px; font-size: 0.72rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .copy-btn:hover { background: var(--gold-light); }
+    .close-sheet {
+      display: block; width: 100%; padding: 12px;
+      background: var(--dark-3); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; color: var(--muted);
+      font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+      cursor: pointer; transition: color 0.2s;
+    }
+    .close-sheet:hover { color: var(--text); }
+  </style>
 </head>
-
 <body>
 
 <div class="particles">
-  <span class="particle"></span>
-  <span class="particle"></span>
-  <span class="particle"></span>
-  <span class="particle"></span>
+  <span class="particle"></span><span class="particle"></span>
+  <span class="particle"></span><span class="particle"></span>
   <span class="particle"></span>
 </div>
 
-<div class="page">
-  <div class="card">
+<div class="card">
 
+  <div class="topbar">
     <div class="lang-toggle">
-      <button id="btn-en" onclick="setLang('en')">EN</button>
+      <button id="btn-en" onclick="setLang('en')" class="active-lang">EN</button>
       <button id="btn-ar" onclick="setLang('ar')">AR</button>
     </div>
+  </div>
 
-    <img src="profile.jpg" class="profile-pic">
-
-    <h1 data-key="name">Muhammed Ashkar Muthuvatt</h1>
-    <h2 data-key="designation">IT Infrastructure Technician</h2>
-
-    <!-- LOGO ALWAYS VISIBLE -->
-    <img src="logo.png" class="logo">
-
-    <div class="slogan" data-key="slogan">
-      Reliable IT & Smart Infrastructure Solutions, From Sales To Support
+  <div class="hero">
+    <div class="avatar-wrap">
+      <img class="profile-pic" src="https://rakhsainfratech.github.io/card/profile.jpg" alt="Muhammed Ashkar"/>
     </div>
+    <div class="name" data-key="name">Muhammed Ashkar Muthuvatt</div>
+    <div class="designation" data-key="designation">IT Infrastructure Technician</div>
+    <div class="logo-wrap">
+      <img src="https://rakhsainfratech.github.io/card/logo.png" alt="Rakhsa Infra Tech"/>
+    </div>
+    <div class="slogan" data-key="slogan">Reliable IT &amp; Smart Infrastructure Solutions, From Sales To Support</div>
+  </div>
 
-    <div class="buttons">
-      <a onclick="saveContact()" class="save save-attention">
-        <i class="fas fa-user-plus"></i>
+  <div class="divider"></div>
+
+  <div class="buttons">
+    <button class="btn btn-save" onclick="saveContact()">
+      <div class="btn-icon"><i class="fas fa-user-plus"></i></div>
+      <div class="btn-text">
         <span data-key="save">Save Contact</span>
-      </a>
+        <span class="sub">Add to your phone</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </button>
 
-      <a href="https://wa.me/971568486808" class="whatsapp">
-        <i class="fab fa-whatsapp"></i>
+    <a class="btn btn-wa" href="https://wa.me/971568486808" target="_blank" rel="noopener">
+      <div class="btn-icon"><i class="fab fa-whatsapp"></i></div>
+      <div class="btn-text">
         <span data-key="whatsapp">Chat on WhatsApp</span>
-      </a>
+        <span class="sub">+971 56 848 6808</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
 
-      <a href="tel:+971568486808" class="call">
-        <i class="fas fa-phone"></i>
+    <a class="btn btn-default" href="tel:+971568486808">
+      <div class="btn-icon"><i class="fas fa-phone"></i></div>
+      <div class="btn-text">
         <span data-key="call">Call Now</span>
-      </a>
+        <span class="sub">+971 56 848 6808</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
 
-      <a href="mailto:rakhsainfratech@gmail.com?subject=IT%20Infrastructure%20Enquiry" class="call">
-        <i class="fas fa-envelope"></i>
+    <a class="btn btn-default" href="mailto:rakhsainfratech@gmail.com?subject=IT%20Infrastructure%20Enquiry">
+      <div class="btn-icon"><i class="fas fa-envelope"></i></div>
+      <div class="btn-text">
         <span data-key="email">Send Email</span>
-      </a>
+        <span class="sub">rakhsainfratech@gmail.com</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
 
-      <a href="https://rakhsainfratech.github.io/home/" class="website">
-        <i class="fas fa-globe"></i>
+    <a class="btn btn-default" href="https://rakhsainfratech.github.io/home/" target="_blank" rel="noopener">
+      <div class="btn-icon"><i class="fas fa-globe"></i></div>
+      <div class="btn-text">
         <span data-key="website">Visit Website</span>
-      </a>
+        <span class="sub">rakhsainfratech.github.io</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </a>
 
-      <a onclick="shareCard()" class="share">
-        <i class="fas fa-share-nodes"></i>
+    <button class="btn btn-default" onclick="shareCard()">
+      <div class="btn-icon"><i class="fas fa-share-nodes"></i></div>
+      <div class="btn-text">
         <span data-key="share">Share This Card</span>
-      </a>
-    </div>
+        <span class="sub">Copy or share the link</span>
+      </div>
+      <span class="btn-arrow">›</span>
+    </button>
+  </div>
 
-    <div class="tip-wave" data-key="tip">
-      Tip: Save contact first for easier WhatsApp identification
-    </div>
+  <div class="tip-wave" data-key="tip">Tip: Save contact first for easier WhatsApp identification</div>
 
-    <div class="socials">
-      <a href="https://instagram.com/rakhsa_uae"><i class="fab fa-instagram"></i></a>
-      <a href="https://facebook.com/rakhsauae"><i class="fab fa-facebook"></i></a>
-      <a href="https://tiktok.com/@rakhsa_uae"><i class="fab fa-tiktok"></i></a>
-      <a href="https://pinterest.com/rakhsa_uae"><i class="fab fa-pinterest"></i></a>
-      <a href="https://www.linkedin.com/in/ashkar2u"><i class="fab fa-linkedin"></i></a>
-      <a href="https://www.youtube.com/@rakhsa_uae"><i class="fab fa-youtube"></i></a>
-    </div>
+  <!-- All 6 Social Media Links -->
+  <div class="socials">
+    <a href="https://instagram.com/rakhsa_uae" target="_blank" rel="noopener" class="ig" title="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://facebook.com/rakhsauae" target="_blank" rel="noopener" class="fb" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://tiktok.com/@rakhsa_uae" target="_blank" rel="noopener" class="tt" title="TikTok"><i class="fab fa-tiktok"></i></a>
+    <a href="https://pinterest.com/rakhsa_uae" target="_blank" rel="noopener" class="pt" title="Pinterest"><i class="fab fa-pinterest-p"></i></a>
+    <a href="https://www.linkedin.com/in/ashkar2u" target="_blank" rel="noopener" class="li" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    <a href="https://www.youtube.com/@rakhsa_uae" target="_blank" rel="noopener" class="yt" title="YouTube"><i class="fab fa-youtube"></i></a>
+  </div>
 
-    <div class="footer" data-key="footer">
-      UAE | Ajman • Sharjah • Dubai
-    </div>
+  <div class="footer" data-key="footer">UAE | Ajman • Sharjah • Dubai</div>
 
+</div>
+
+<!-- Share Modal -->
+<div class="share-modal" id="shareModal" onclick="if(event.target===this)closeModal()">
+  <div class="share-sheet">
+    <h3>Share This Card</h3>
+    <div class="share-url">
+      <span>https://rakhsainfratech.github.io/card/</span>
+      <button class="copy-btn" onclick="copyLink()">Copy</button>
+    </div>
+    <button class="close-sheet" onclick="closeModal()">Close</button>
   </div>
 </div>
 
 <script>
 const translations = {
   en: {
-    name: "Muhammed Ashkar Muthuvatt",
-    designation: "IT Infrastructure Technician",
-    slogan: "Reliable IT & Smart Infrastructure Solutions, From Sales To Support",
-    save: "Save Contact",
-    whatsapp: "Chat on WhatsApp",
-    call: "Call Now",
-    email: "Send Email",
-    website: "Visit Website",
-    share: "Share This Card",
-    tip: "Tip: Save contact first for easier WhatsApp identification",
-    footer: "UAE | Ajman • Sharjah • Dubai"
+    name:"Muhammed Ashkar Muthuvatt", designation:"IT Infrastructure Technician",
+    slogan:"Reliable IT & Smart Infrastructure Solutions, From Sales To Support",
+    save:"Save Contact", whatsapp:"Chat on WhatsApp", call:"Call Now",
+    email:"Send Email", website:"Visit Website", share:"Share This Card",
+    tip:"Tip: Save contact first for easier WhatsApp identification",
+    footer:"UAE | Ajman • Sharjah • Dubai"
   },
   ar: {
-    name: "محمد اشكر مدوات",
-    designation: "فني البنية التحتية لتقنية المعلومات",
-    slogan: "حلول تقنية معلومات وبنية تحتية ذكية موثوقة، من البيع إلى الدعم",
-    save: "حفظ جهة الاتصال",
-    whatsapp: "الدردشة عبر واتساب",
-    call: "اتصال الآن",
-    email: "إرسال بريد إلكتروني",
-    website: "زيارة الموقع",
-    share: "مشاركة البطاقة",
-    tip: "نصيحة: احفظ جهة الاتصال أولاً لسهولة التعرف عبر واتساب",
-    footer: "الإمارات العربية المتحدة | عجمان • الشارقة • دبي"
+    name:"محمد اشكر مدوات", designation:"فني البنية التحتية لتقنية المعلومات",
+    slogan:"حلول تقنية معلومات وبنية تحتية ذكية موثوقة، من البيع إلى الدعم",
+    save:"حفظ جهة الاتصال", whatsapp:"الدردشة عبر واتساب", call:"اتصال الآن",
+    email:"إرسال بريد إلكتروني", website:"زيارة الموقع", share:"مشاركة البطاقة",
+    tip:"نصيحة: احفظ جهة الاتصال أولاً لسهولة التعرف عبر واتساب",
+    footer:"الإمارات العربية المتحدة | عجمان • الشارقة • دبي"
   }
 };
 
 function setLang(lang) {
   document.documentElement.lang = lang;
-  document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-
-  document.querySelectorAll("[data-key]").forEach(el => {
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-key]').forEach(el => {
     el.textContent = translations[lang][el.dataset.key];
   });
-
-  document.getElementById("btn-en").style.display = lang === "en" ? "none" : "inline-block";
-  document.getElementById("btn-ar").style.display = lang === "ar" ? "none" : "inline-block";
+  document.getElementById('btn-en').classList.toggle('active-lang', lang === 'en');
+  document.getElementById('btn-ar').classList.toggle('active-lang', lang === 'ar');
 }
-
-setLang("en");
+setLang('en');
 
 function saveContact() {
-  const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-  const vcard = 'rakhsa-infra-tech.vcf';
-  isIOS ? window.open(vcard) : window.location.href = vcard;
+  const v = `BEGIN:VCARD\nVERSION:3.0\nFN:Muhammed Ashkar Muthuvatt\nORG:Rakhsa Infra Tech\nTITLE:IT Infrastructure Technician\nTEL;TYPE=CELL:+971568486808\nEMAIL:rakhsainfratech@gmail.com\nURL:https://rakhsainfratech.github.io/home/\nADR;TYPE=WORK:;;UAE;Ajman;Sharjah;Dubai;\nEND:VCARD`;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([v], {type:'text/vcard'}));
+  a.download = 'Muhammed_Ashkar.vcf';
+  a.click();
 }
 
 function shareCard() {
   if (navigator.share) {
-    navigator.share({
-      title: "Rakhsa Infra Tech – Digital Card",
-      text: "Save my contact and connect with Rakhsa Infra Tech",
-      url: "https://rakhsainfratech.github.io/card/"
-    });
+    navigator.share({ title:'Rakhsa Infra Tech – Digital Card', url:'https://rakhsainfratech.github.io/card/' });
+  } else {
+    document.getElementById('shareModal').classList.add('open');
   }
 }
+function closeModal() { document.getElementById('shareModal').classList.remove('open'); }
+function copyLink() {
+  navigator.clipboard.writeText('https://rakhsainfratech.github.io/card/').then(() => {
+    const b = document.querySelector('.copy-btn');
+    b.textContent = 'Copied!';
+    setTimeout(() => b.textContent = 'Copy', 2000);
+  });
+}
 </script>
-
 </body>
 </html>
